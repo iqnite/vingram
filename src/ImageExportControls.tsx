@@ -55,7 +55,7 @@ export default function ImageExportControls() {
   }, [getImageOptions]);
 
   return (
-    <div style={{ position: "absolute", top: 50, right: 10, zIndex: 100 }}>
+    <div style={{ position: "absolute", top: 10, right: 10, zIndex: 100 }}>
       <button onClick={onDownload}>Download PNG</button>
       <button onClick={onCopyToClipboard}>Copy to Clipboard</button>
     </div>

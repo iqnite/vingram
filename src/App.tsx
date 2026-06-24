@@ -1,10 +1,15 @@
-import React, {
-  useState,
-  useCallback,
-  useRef,
-  type SetStateAction,
-} from "react";
-import { ReactFlow, Background, Controls } from "@xyflow/react";
+import React, { useCallback } from "react";
+import {
+  ReactFlow,
+  Background,
+  Controls,
+  ReactFlowProvider,
+  useNodesState,
+  useEdgesState,
+  useReactFlow,
+  type Node,
+  type Edge,
+} from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
 import Sidebar from "./Sidebar";
@@ -20,10 +25,10 @@ let id = 0;
 const getId = () => `dndnode_${id++}`;
 
 function DnDFlow() {
-  const reactFlowWrapper = useRef(null);
-  const [nodes, setNodes] = useState([]);
-  const [edges] = useState([]);
-  const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [edges, , onEdgesChange] = useEdgesState<Edge>([]);
+
+  const { screenToFlowPosition } = useReactFlow();
 
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -37,29 +42,20 @@ function DnDFlow() {
       const type = event.dataTransfer.getData("application/reactflow-type");
       const svgUrl = event.dataTransfer.getData("application/reactflow-url");
 
-      if (typeof type === "undefined" || !type) {
+      if (!type || !svgUrl) {
         return;
       }
 
-      const position = (
-        reactFlowInstance as unknown as {
-          // eslint-disable-next-line no-unused-vars
-          screenToFlowPosition: ({ x, y }: { x: number; y: number }) => void;
-        }
-      )?.screenToFlowPosition({
+      const position = screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
       });
 
-      const newNode = await createSvgNode(
-        getId(),
-        svgUrl,
-        position as unknown as { x: number; y: number },
-      );
+      const newNode = await createSvgNode(getId(), svgUrl, position);
 
-      setNodes((nds) => nds.concat(newNode as never[]));
+      setNodes((nds) => nds.concat(newNode as Node));
     },
-    [reactFlowInstance, setNodes],
+    [screenToFlowPosition, setNodes],
   );
 
   return (
@@ -72,14 +68,13 @@ function DnDFlow() {
       }}
     >
       <Sidebar shapeUrls={shapes} />
-      <div style={{ flexGrow: 1, height: "100%" }} ref={reactFlowWrapper}>
+      <div style={{ flexGrow: 1, height: "100%" }}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
           nodeTypes={nodeTypes}
-          onInit={(instance) =>
-            setReactFlowInstance(instance as unknown as SetStateAction<null>)
-          }
           onDrop={onDrop}
           onDragOver={onDragOver}
           fitView
@@ -93,5 +88,9 @@ function DnDFlow() {
 }
 
 export default function App() {
-  return <DnDFlow />;
+  return (
+    <ReactFlowProvider>
+      <DnDFlow />
+    </ReactFlowProvider>
+  );
 }

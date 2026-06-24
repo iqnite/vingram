@@ -14,7 +14,11 @@ export default function SVGShapeNode({
         <div
           className="svg-container"
           dangerouslySetInnerHTML={{ __html: data.svgContent }}
-          style={{ width: "100px", height: "100px" }}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         />
       ) : (
         <div>Loading shape...</div>

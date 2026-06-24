@@ -1,0 +1,27 @@
+{
+  "name": "vingram",
+  "version": "1.0.0",
+  "description": "Vintage Diagram drawing tool.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iqnite/vingram.git"
+  },
+  "keywords": [
+    "vintage",
+    "diagram",
+    "draw"
+  ],
+  "author": "iqnite",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iqnite/vingram/issues"
+  },
+  "homepage": "https://github.com/iqnite/vingram#readme",
+  "dependencies": {
+    "@xyflow/react": "^12.11.1"
+  }
+}

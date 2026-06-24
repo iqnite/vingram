@@ -1,4 +1,5 @@
-import { Handle, Position } from "@xyflow/react";
+import { Position } from "@xyflow/react";
+import OmniHandleNode from "./OmniHandleNode";
 
 export default function SVGShapeNode({
   data,
@@ -8,7 +9,7 @@ export default function SVGShapeNode({
   return (
     <div className="svg-node-wrapper">
       {/* TODO: Make handles configurable */}
-      <Handle type="target" position={Position.Top} />
+      <OmniHandleNode position={Position.Top} />
 
       {data.svgContent ? (
         <div
@@ -24,7 +25,7 @@ export default function SVGShapeNode({
         <div>Loading shape...</div>
       )}
 
-      <Handle type="source" position={Position.Bottom} />
+      <OmniHandleNode position={Position.Bottom} />
     </div>
   );
 }

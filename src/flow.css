@@ -1,0 +1,11 @@
+.flow-wrapper.is-connecting .react-flow__node {
+  pointer-events: none;
+}
+
+.flow-wrapper.is-connecting .react-flow__handle {
+  pointer-events: all;
+}
+
+.react-flow__connection-path {
+  pointer-events: none;
+}

@@ -21,6 +21,7 @@ import { createSvgNode } from "./shapeManager";
 import { shapes } from "./shapes";
 import "./App.css";
 import "./flow.css";
+import SaveRestoreControls from "./SaveRestoreControls";
 
 const nodeTypes = {
   svgShapeNode: SvgShapeNode,
@@ -36,8 +37,7 @@ const defaultEdgeOptions = {
   },
 };
 
-let id = 0;
-const getId = () => `dndnode_${id++}`;
+const getId = () => `dndnode_${crypto.randomUUID()}`;
 
 function DnDFlow() {
   const [isConnecting, setIsConnecting] = useState(false);
@@ -95,6 +95,7 @@ function DnDFlow() {
         overflow: "hidden",
       }}
     >
+      <SaveRestoreControls setNodes={setNodes} setEdges={setEdges} />
       <Sidebar shapeUrls={shapes} />
       <div
         className={`react-flow ${isConnecting ? "is-connecting" : ""}`}

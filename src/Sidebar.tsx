@@ -6,7 +6,6 @@ export default function Sidebar({ shapeUrls }: { shapeUrls: string[] }) {
     nodeType: string,
     svgUrl: string,
   ) => {
-    console.log("Dragging shape:", nodeType, svgUrl);
     event.dataTransfer.setData("application/reactflow-type", nodeType);
     event.dataTransfer.setData("application/reactflow-url", svgUrl);
     event.dataTransfer.effectAllowed = "move";

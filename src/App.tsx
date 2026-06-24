@@ -25,7 +25,6 @@ function DnDFlow() {
   const [edges] = useState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
-  // Required to allow dropping
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
@@ -35,16 +34,13 @@ function DnDFlow() {
     async (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
 
-      // Retrieve the data we attached in the Sidebar
       const type = event.dataTransfer.getData("application/reactflow-type");
       const svgUrl = event.dataTransfer.getData("application/reactflow-url");
 
-      // Check if the dropped element is valid
       if (typeof type === "undefined" || !type) {
         return;
       }
 
-      // Translate the pixel coordinates to React Flow coordinates
       const position = (
         reactFlowInstance as unknown as {
           // eslint-disable-next-line no-unused-vars
@@ -55,7 +51,6 @@ function DnDFlow() {
         y: event.clientY,
       });
 
-      // Use our shapeManager module to fetch/cache the SVG and build the node
       const newNode = await createSvgNode(
         getId(),
         svgUrl,

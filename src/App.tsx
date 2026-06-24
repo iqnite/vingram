@@ -9,6 +9,8 @@ import {
   useReactFlow,
   type Node,
   type Edge,
+  addEdge,
+  type Connection,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
@@ -26,7 +28,7 @@ const getId = () => `dndnode_${id++}`;
 
 function DnDFlow() {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
-  const [edges, , onEdgesChange] = useEdgesState<Edge>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
   const { screenToFlowPosition } = useReactFlow();
 
@@ -34,6 +36,12 @@ function DnDFlow() {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
   }, []);
+
+  const onConnect = useCallback(
+    (params: Connection) =>
+      setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
+    [setEdges],
+  );
 
   const onDrop = useCallback(
     async (event: React.DragEvent<HTMLDivElement>) => {
@@ -75,6 +83,7 @@ function DnDFlow() {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           nodeTypes={nodeTypes}
+          onConnect={onConnect}
           onDrop={onDrop}
           onDragOver={onDragOver}
           fitView

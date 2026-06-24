@@ -21,6 +21,7 @@ import { createSvgNode } from "./shapeManager";
 import { shapes } from "./shapes";
 import "./App.css";
 import "./flow.css";
+import ImageExportControls from "./ImageExportControls";
 
 const AUTOSAVE_KEY = "vingram-autosave";
 
@@ -120,6 +121,7 @@ function DnDFlow() {
         overflow: "hidden",
       }}
     >
+      <ImageExportControls />
       <Sidebar shapeUrls={shapes} />
       <div
         className={`react-flow ${isConnecting ? "is-connecting" : ""}`}

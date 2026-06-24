@@ -1,0 +1,11 @@
+export const shapes = [
+  "Achromatic_Doublet.svg",
+  "Beamsplitter.svg",
+  "Convex_Lens.svg",
+  "Default_Prism.svg",
+  "Diverging_Lens_Thin.svg",
+  "Diverging_Lens.svg",
+  "FC_Male.svg",
+  "Plano_Convex_Lens_Thin.svg",
+  "Plano_Convex_Lens.svg",
+];

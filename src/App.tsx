@@ -1,48 +1,96 @@
-import { useEffect, useState } from "react";
-import { ReactFlow } from "@xyflow/react";
-
-import SVGShapeNode from "./SVGShapeNode";
-import { createSvgNode } from "./shapemanager";
-
-import "./App.css";
+import React, {
+  useState,
+  useCallback,
+  useRef,
+  type SetStateAction,
+} from "react";
+import { ReactFlow, Background, Controls } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
+import Sidebar from "./Sidebar";
+import SvgShapeNode from "./SVGShapeNode";
+import { createSvgNode } from "./shapeManager";
+import { shapes } from "./shapes";
+
 const nodeTypes = {
-  svgShapeNode: SVGShapeNode,
+  svgShapeNode: SvgShapeNode,
 };
 
-export default function App() {
+let id = 0;
+const getId = () => `dndnode_${id++}`;
+
+function DnDFlow() {
+  const reactFlowWrapper = useRef(null);
   const [nodes, setNodes] = useState([]);
   const [edges] = useState([]);
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
-  useEffect(() => {
-    async function initializeNodes() {
-      const node1 = await createSvgNode(
-        "node-1",
-        "/shapes/AchromaticDoublet.svg",
-        {
-          x: 100,
-          y: 100,
-        },
-      );
-      const node2 = await createSvgNode("node-2", "/shapes/Beamsplitter.svg", {
-        x: 300,
-        y: 100,
-      });
-      const node3 = await createSvgNode("node-3", "/shapes/ConvexLens.svg", {
-        x: 200,
-        y: 300,
-      });
-
-      setNodes([node1, node2, node3] as never[]);
-    }
-
-    initializeNodes();
+  // Required to allow dropping
+  const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
   }, []);
 
+  const onDrop = useCallback(
+    async (event: React.DragEvent<HTMLDivElement>) => {
+      event.preventDefault();
+
+      // Retrieve the data we attached in the Sidebar
+      const type = event.dataTransfer.getData("application/reactflow-type");
+      const svgUrl = event.dataTransfer.getData("application/reactflow-url");
+
+      // Check if the dropped element is valid
+      if (typeof type === "undefined" || !type) {
+        return;
+      }
+
+      // Translate the pixel coordinates to React Flow coordinates
+      const position = (
+        reactFlowInstance as unknown as {
+          // eslint-disable-next-line no-unused-vars
+          screenToFlowPosition: ({ x, y }: { x: number; y: number }) => void;
+        }
+      )?.screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
+
+      // Use our shapeManager module to fetch/cache the SVG and build the node
+      const newNode = await createSvgNode(
+        getId(),
+        svgUrl,
+        position as unknown as { x: number; y: number },
+      );
+
+      setNodes((nds) => nds.concat(newNode as never[]));
+    },
+    [reactFlowInstance, setNodes],
+  );
+
   return (
-    <div style={{ width: "100vw", height: "100vh" }}>
-      <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes}></ReactFlow>
+    <div style={{ display: "flex", width: "100vw", height: "100vh" }}>
+      <Sidebar shapeUrls={shapes} />
+
+      <div style={{ flexGrow: 1 }} ref={reactFlowWrapper}>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          nodeTypes={nodeTypes}
+          onInit={(instance) =>
+            setReactFlowInstance(instance as unknown as SetStateAction<null>)
+          }
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+          fitView
+        >
+          <Background />
+          <Controls />
+        </ReactFlow>
+      </div>
     </div>
   );
+}
+
+export default function App() {
+  return <DnDFlow />;
 }

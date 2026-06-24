@@ -30,8 +30,9 @@ const defaultEdgeOptions = {
   type: "straight",
   zIndex: 1000,
   style: {
-    strokeWidth: 2,
-    stroke: "#000",
+    strokeWidth: 1,
+    stroke: "#010101",
+    strokeDasharray: "5 5",
   },
 };
 
@@ -109,7 +110,7 @@ function DnDFlow() {
           onConnectStart={onConnectStart}
           onConnectEnd={onConnectEnd}
           connectionLineType={ConnectionLineType.Straight}
-          connectionLineStyle={{ stroke: "#000", strokeWidth: 2 }}
+          connectionLineStyle={defaultEdgeOptions.style}
           onDrop={onDrop}
           onDragOver={onDragOver}
           defaultEdgeOptions={defaultEdgeOptions}

@@ -1,4 +1,5 @@
 import React from "react";
+import SVGShapeNode from "./SVGShapeNode";
 
 export default function Sidebar({ shapeUrls }: { shapeUrls: string[] }) {
   const onDragStart = (
@@ -34,8 +35,13 @@ export default function Sidebar({ shapeUrls }: { shapeUrls: string[] }) {
             marginTop: "10px",
             cursor: "grab",
           }}
+          title={svgName.split("/").pop()?.split(".")[0].replaceAll("_", " ")}
         >
-          {svgName.split("/").pop()?.split(".")[0].replaceAll("_", " ")}
+          {SVGShapeNode({
+            data: {
+              svgContent: `<img src="/shapes/${svgName}" alt="${svgName}" style="max-width: 100%; max-height: 50px;" />`,
+            },
+          })}
         </div>
       ))}
     </aside>

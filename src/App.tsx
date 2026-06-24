@@ -68,10 +68,16 @@ function DnDFlow() {
   );
 
   return (
-    <div style={{ display: "flex", width: "100vw", height: "100vh" }}>
+    <div
+      style={{
+        display: "flex",
+        width: "100%",
+        height: "100vh",
+        overflow: "hidden",
+      }}
+    >
       <Sidebar shapeUrls={shapes} />
-
-      <div style={{ flexGrow: 1 }} ref={reactFlowWrapper}>
+      <div style={{ flexGrow: 1, height: "100%" }} ref={reactFlowWrapper}>
         <ReactFlow
           nodes={nodes}
           edges={edges}

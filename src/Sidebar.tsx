@@ -14,7 +14,12 @@ export default function Sidebar({ shapeUrls }: { shapeUrls: string[] }) {
 
   return (
     <aside
-      style={{ width: "200px", borderRight: "1px solid #ccc", padding: "10px" }}
+      style={{
+        width: "200px",
+        borderRight: "1px solid #ccc",
+        padding: "10px",
+        overflowY: "auto",
+      }}
     >
       <div className="description">Drag these shapes onto the canvas:</div>
       {shapeUrls.map((svgName) => (
@@ -22,11 +27,7 @@ export default function Sidebar({ shapeUrls }: { shapeUrls: string[] }) {
           className="dndnode"
           draggable
           onDragStart={(event) =>
-            onDragStart(
-              event,
-              "svgShapeNode",
-              `/shapes/${svgName}`,
-            )
+            onDragStart(event, "svgShapeNode", `/shapes/${svgName}`)
           }
           style={{
             padding: "10px",

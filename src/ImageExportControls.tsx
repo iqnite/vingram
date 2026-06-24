@@ -57,8 +57,15 @@ export default function ImageExportControls() {
 
   return (
     <span className="drawing-control-section">
-      <button onClick={onDownload}>Download PNG</button>
-      <button onClick={onCopyToClipboard}>Copy to Clipboard</button>
+      <button
+        onClick={onCopyToClipboard}
+        title="Copy the diagram to the clipboard"
+      >
+        Copy
+      </button>
+      <button onClick={onDownload} title="Download the diagram as a PNG image">
+        Download PNG
+      </button>
     </span>
   );
 }

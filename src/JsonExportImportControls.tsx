@@ -66,8 +66,15 @@ export default function JsonExportImportControls({
 
   return (
     <span className="drawing-control-section">
-      <button onClick={onSaveJson}>Download JSON</button>
-      <button onClick={() => fileInputRef.current?.click()}>Upload JSON</button>
+      <button onClick={onSaveJson} title="Save an editable JSON file">
+        Download JSON
+      </button>
+      <button
+        onClick={() => fileInputRef.current?.click()}
+        title="Upload a JSON file"
+      >
+        Upload JSON
+      </button>
       <input
         type="file"
         accept=".json"
@@ -75,6 +82,21 @@ export default function JsonExportImportControls({
         style={{ display: "none" }}
         onChange={onLoadJson}
       />
+      <button
+        onClick={() => {
+          if (
+            confirm(
+              "Are you sure you want to delete everything in the diagram? This action cannot be undone.",
+            )
+          ) {
+            setNodes([]);
+            setEdges([]);
+          }
+        }}
+        title="Clear the diagram"
+      >
+        Clear
+      </button>
     </span>
   );
 }

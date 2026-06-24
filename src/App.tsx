@@ -1,25 +1,48 @@
+import { useEffect, useState } from "react";
 import { ReactFlow } from "@xyflow/react";
-import "@xyflow/react/dist/style.css";
+
+import SVGShapeNode from "./SVGShapeNode";
+import { createSvgNode } from "./shapemanager";
+
 import "./App.css";
+import "@xyflow/react/dist/style.css";
 
-function App() {
-  const initialNodes = [
-    { id: "1", position: { x: 0, y: 0 }, data: { label: "Start Node" } },
-    { id: "2", position: { x: 0, y: 100 }, data: { label: "Second Node" } },
-  ];
+const nodeTypes = {
+  svgShapeNode: SVGShapeNode,
+};
 
-  const initialEdges = [
-    { id: "e1-2", source: "1", target: "2", animated: true },
-  ];
+export default function App() {
+  const [nodes, setNodes] = useState([]);
+  const [edges] = useState([]);
+
+  useEffect(() => {
+    async function initializeNodes() {
+      const node1 = await createSvgNode(
+        "node-1",
+        "/shapes/AchromaticDoublet.svg",
+        {
+          x: 100,
+          y: 100,
+        },
+      );
+      const node2 = await createSvgNode("node-2", "/shapes/Beamsplitter.svg", {
+        x: 300,
+        y: 100,
+      });
+      const node3 = await createSvgNode("node-3", "/shapes/ConvexLens.svg", {
+        x: 200,
+        y: 300,
+      });
+
+      setNodes([node1, node2, node3] as never[]);
+    }
+
+    initializeNodes();
+  }, []);
+
   return (
-    <>
-      <section id="center">
-        <div style={{ width: "100vw", height: "100vh" }}>
-          <ReactFlow nodes={initialNodes} edges={initialEdges} />
-        </div>
-      </section>
-    </>
+    <div style={{ width: "100vw", height: "100vh" }}>
+      <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes}></ReactFlow>
+    </div>
   );
 }
-
-export default App;

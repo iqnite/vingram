@@ -22,6 +22,7 @@ import { shapes } from "./shapes";
 import "./App.css";
 import "./flow.css";
 import ImageExportControls from "./ImageExportControls";
+import JsonExportImportControls from "./JsonExportImportControls";
 
 const AUTOSAVE_KEY = "vingram-autosave";
 
@@ -121,7 +122,6 @@ function DnDFlow() {
         overflow: "hidden",
       }}
     >
-      <ImageExportControls />
       <Sidebar shapeUrls={shapes} />
       <div
         className={`react-flow ${isConnecting ? "is-connecting" : ""}`}
@@ -146,6 +146,10 @@ function DnDFlow() {
           <Background />
           <Controls />
         </ReactFlow>
+      </div>
+      <div className="drawing-controls">
+        <ImageExportControls />
+        <JsonExportImportControls setNodes={setNodes} setEdges={setEdges} />
       </div>
     </div>
   );

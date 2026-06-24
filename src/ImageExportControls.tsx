@@ -5,6 +5,7 @@ import {
   getViewportForBounds,
 } from "@xyflow/react";
 import { toPng, toBlob } from "html-to-image";
+import "./App.css";
 
 export default function ImageExportControls() {
   const { getNodes } = useReactFlow();
@@ -55,9 +56,9 @@ export default function ImageExportControls() {
   }, [getImageOptions]);
 
   return (
-    <div style={{ position: "absolute", top: 10, right: 10, zIndex: 100 }}>
+    <span className="drawing-control-section">
       <button onClick={onDownload}>Download PNG</button>
       <button onClick={onCopyToClipboard}>Copy to Clipboard</button>
-    </div>
+    </span>
   );
 }

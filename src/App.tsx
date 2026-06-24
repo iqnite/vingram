@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   ReactFlow,
   Background,
@@ -21,7 +21,8 @@ import { createSvgNode } from "./shapeManager";
 import { shapes } from "./shapes";
 import "./App.css";
 import "./flow.css";
-import SaveRestoreControls from "./SaveRestoreControls";
+
+const AUTOSAVE_KEY = "vingram-autosave";
 
 const nodeTypes = {
   svgShapeNode: SvgShapeNode,
@@ -41,14 +42,38 @@ const getId = () => `dndnode_${crypto.randomUUID()}`;
 
 function DnDFlow() {
   const [isConnecting, setIsConnecting] = useState(false);
-
   const onConnectStart = useCallback(() => setIsConnecting(true), []);
   const onConnectEnd = useCallback(() => setIsConnecting(false), []);
+
+  const [isRestored, setIsRestored] = useState(false);
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
-  const { screenToFlowPosition } = useReactFlow();
+  const { screenToFlowPosition, setViewport, toObject } = useReactFlow();
+
+  useEffect(() => {
+    const restoreFlow = () => {
+      const storedFlow = localStorage.getItem(AUTOSAVE_KEY);
+      if (storedFlow) {
+        const flowData = JSON.parse(storedFlow);
+        if (flowData) {
+          setNodes(flowData.nodes || []);
+          setEdges(flowData.edges || []);
+          setViewport(flowData.viewport || { x: 0, y: 0, zoom: 1 });
+        }
+      }
+      setIsRestored(true);
+    };
+    restoreFlow();
+  }, [setNodes, setEdges, setViewport]);
+
+  useEffect(() => {
+    if (isRestored) {
+      const flowData = toObject();
+      localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(flowData));
+    }
+  }, [nodes, edges, isRestored, toObject]);
 
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -95,7 +120,6 @@ function DnDFlow() {
         overflow: "hidden",
       }}
     >
-      <SaveRestoreControls setNodes={setNodes} setEdges={setEdges} />
       <Sidebar shapeUrls={shapes} />
       <div
         className={`react-flow ${isConnecting ? "is-connecting" : ""}`}

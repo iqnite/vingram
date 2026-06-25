@@ -88,7 +88,6 @@ function DnDFlow() {
       if (storedLibraryUrls) {
         const libraryUrls = JSON.parse(storedLibraryUrls);
         for (const url of libraryUrls) {
-          console.log("Restoring library URL:", url);
           if (!libraryUrls.includes(url)) libraryUrls.push(url);
         }
       }

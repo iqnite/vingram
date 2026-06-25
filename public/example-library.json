@@ -1,0 +1,4 @@
+{
+  "baseUrl": "https://example.com/shapes/",
+  "svgNames": ["Square.svg", "Circle.svg", "Convex_Lens.svg"]
+}

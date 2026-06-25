@@ -25,8 +25,8 @@ import JsonExportImportControls from "./JsonExportImportControls";
 
 const AUTOSAVE_KEY = "vingram-autosave";
 const LIBRARY_URLS_KEY = "vingram-library-urls";
+const DEFAULT_LIBRARY_URLS = ["/shapes.json"];
 
-const libraryUrls = ["/shapes.json"];
 const nodeTypes = {
   svgShapeNode: SvgShapeNode,
 };
@@ -49,6 +49,24 @@ function DnDFlow() {
   const onConnectEnd = useCallback(() => setIsConnecting(false), []);
 
   const [isRestored, setIsRestored] = useState(false);
+  const [libraryUrls, setLibraryUrls] = useState<string[]>(() => {
+    const saved = localStorage.getItem(LIBRARY_URLS_KEY);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          return parsed;
+        }
+      } catch {
+        console.error("Error parsing saved library URLs");
+      }
+    }
+    return DEFAULT_LIBRARY_URLS;
+  });
+
+  useEffect(() => {
+    localStorage.setItem(LIBRARY_URLS_KEY, JSON.stringify(libraryUrls));
+  }, [libraryUrls]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
@@ -70,6 +88,7 @@ function DnDFlow() {
       if (storedLibraryUrls) {
         const libraryUrls = JSON.parse(storedLibraryUrls);
         for (const url of libraryUrls) {
+          console.log("Restoring library URL:", url);
           if (!libraryUrls.includes(url)) libraryUrls.push(url);
         }
       }
@@ -84,7 +103,7 @@ function DnDFlow() {
       localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(flowData));
       localStorage.setItem(LIBRARY_URLS_KEY, JSON.stringify(libraryUrls));
     }
-  }, [nodes, edges, isRestored, toObject]);
+  }, [nodes, edges, isRestored, toObject, libraryUrls]);
 
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -131,7 +150,7 @@ function DnDFlow() {
         overflow: "hidden",
       }}
     >
-      <Sidebar libraryUrls={libraryUrls} />
+      <Sidebar libraryUrls={libraryUrls} setLibraryUrls={setLibraryUrls} />
       <div
         className={`react-flow ${isConnecting ? "is-connecting" : ""}`}
         style={{ flexGrow: 1, height: "100%" }}

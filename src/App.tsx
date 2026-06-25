@@ -23,6 +23,7 @@ import "./App.css";
 import "./flow.css";
 import ImageExportControls from "./ImageExportControls";
 import JsonExportImportControls from "./JsonExportImportControls";
+import SnappingControls from "./SnappingControls";
 
 const AUTOSAVE_KEY = "vingram-autosave";
 const LIBRARY_URLS_KEY = "vingram-library-urls";
@@ -50,6 +51,12 @@ function DnDFlow() {
   const onConnectEnd = useCallback(() => setIsConnecting(false), []);
 
   const [isRestored, setIsRestored] = useState(false);
+  const [snappingOptions, setSnappingOptions] = useState({
+    snapToGrid: true,
+    snapToRotation: true,
+    gridSize: 10,
+    rotationSnapAngle: 15,
+  });
   const [libraryUrls, setLibraryUrls] = useState<string[]>(() => {
     const saved = localStorage.getItem(LIBRARY_URLS_KEY);
     if (saved) {
@@ -125,20 +132,24 @@ function DnDFlow() {
       const type = event.dataTransfer.getData("application/reactflow-type");
       const svgUrl = event.dataTransfer.getData("application/reactflow-url");
 
-      if (!type || !svgUrl) {
-        return;
-      }
+      if (!type || !svgUrl) return;
 
       const position = screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
       });
 
+      if (snappingOptions.snapToGrid) {
+        const gridSize = snappingOptions.gridSize;
+        position.x = Math.round(position.x / gridSize) * gridSize;
+        position.y = Math.round(position.y / gridSize) * gridSize;
+      }
+
       const newNode = await createSvgNode(getId(), svgUrl, position);
 
       setNodes((nds) => nds.concat(newNode as Node));
     },
-    [screenToFlowPosition, setNodes],
+    [screenToFlowPosition, setNodes, snappingOptions],
   );
 
   return (
@@ -177,6 +188,7 @@ function DnDFlow() {
         </ReactFlow>
       </div>
       <div className="drawing-controls">
+        <SnappingControls setSnappingOptions={setSnappingOptions} />
         <ImageExportControls />
         <JsonExportImportControls setNodes={setNodes} setEdges={setEdges} />
       </div>

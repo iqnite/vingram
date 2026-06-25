@@ -145,7 +145,7 @@ function DnDFlow() {
         position.y = Math.round(position.y / gridSize) * gridSize;
       }
 
-      const newNode = await createSvgNode(getId(), svgUrl, position);
+      const newNode = await createSvgNode(getId(), svgUrl, position, snappingOptions);
 
       setNodes((nds) => nds.concat(newNode as Node));
     },

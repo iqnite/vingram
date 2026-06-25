@@ -12,6 +12,7 @@ import {
   addEdge,
   type Connection,
   ConnectionLineType,
+  ConnectionMode,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
@@ -168,6 +169,7 @@ function DnDFlow() {
           onDrop={onDrop}
           onDragOver={onDragOver}
           defaultEdgeOptions={defaultEdgeOptions}
+          connectionMode={ConnectionMode.Loose}
           fitView
         >
           <Background />

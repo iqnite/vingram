@@ -33,7 +33,7 @@ export default function LibraryManager({
       <button onClick={addLibraryDialog}>Add Library</button>
       <div>
         <a
-          href="/example-library.json"
+          href="/vingram/example-library.json"
           target="_blank"
           rel="noopener noreferrer"
           style={{

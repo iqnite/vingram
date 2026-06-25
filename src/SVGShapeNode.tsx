@@ -1,5 +1,10 @@
-import { Handle, Position, useUpdateNodeInternals } from "@xyflow/react";
-import { useEffect, useRef, useState } from "react";
+import {
+  Handle,
+  Position,
+  useReactFlow,
+  useUpdateNodeInternals,
+} from "@xyflow/react";
+import { useEffect, useRef } from "react";
 import { select } from "d3-selection";
 import { drag } from "d3-drag";
 import "./flow.css";
@@ -9,11 +14,12 @@ export default function SVGShapeNode({
   data,
 }: {
   id: string;
-  data: { svgContent: string };
+  data: { svgContent: string; rotation?: number };
 }) {
   const rotateControlRef = useRef(null);
   const updateNodeInternals = useUpdateNodeInternals();
-  const [rotation, setRotation] = useState(0);
+  const { updateNodeData } = useReactFlow();
+  const rotation = data.rotation ?? 0;
 
   useEffect(() => {
     if (!rotateControlRef.current) return;
@@ -23,12 +29,13 @@ export default function SVGShapeNode({
       const dy = event.y - 100;
       const rad = Math.atan2(dx, dy);
       const deg = rad * (180 / Math.PI);
-      setRotation(180 - deg);
+      const newRotation = 180 - deg;
+      updateNodeData(id, { rotation: newRotation });
       updateNodeInternals(id);
     });
     // eslint-disable-next-line no-unused-vars
     selection.call(dragHandler as (selection: unknown) => void);
-  }, [id, updateNodeInternals]);
+  }, [id, updateNodeData, updateNodeInternals]);
 
   return (
     <div

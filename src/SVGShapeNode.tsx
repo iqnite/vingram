@@ -2,6 +2,7 @@ import { Handle, Position, useUpdateNodeInternals } from "@xyflow/react";
 import { useEffect, useRef, useState } from "react";
 import { select } from "d3-selection";
 import { drag } from "d3-drag";
+import "./flow.css";
 
 export default function SVGShapeNode({
   id,
@@ -38,16 +39,7 @@ export default function SVGShapeNode({
     >
       <div
         ref={rotateControlRef}
-        className="nodrag rotatable-node__handle"
-        style={{
-          position: "absolute",
-          top: "-50px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "20px",
-          height: "20px",
-          cursor: "grab",
-        }}
+        className="nodrag rotatable-node__handle rotate-control"
       >
         ⟳
       </div>

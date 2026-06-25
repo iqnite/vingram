@@ -9,3 +9,33 @@
 .react-flow__connection-path {
   pointer-events: none;
 }
+
+.svg-node-wrapper:hover {
+  .omni-handle {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  .rotate-control {
+    opacity: 1;
+  }
+}
+
+.rotate-control {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 20px;
+  cursor: grab;
+  opacity: 0;
+}
+
+.omni-handle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+  border: none !important;
+}

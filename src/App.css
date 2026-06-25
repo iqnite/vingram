@@ -26,16 +26,3 @@ body,
   display: flex;
   gap: 8px;
 }
-
-.omni-handle {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: transparent;
-  transition: background-color 0.2s ease;
-  border: none !important;
-}
-
-.omni-handle:hover {
-  background-color: rgba(0, 0, 0, 0.2);
-}

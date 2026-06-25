@@ -8,6 +8,9 @@ Ever feel the need to draw diagrams that look like drawings in old science textb
 - Connect nodes with edges
 - Snap nodes to a grid for precise alignment
 - Rotate nodes with snapping to specific angles
+- Auto-save your diagrams in the browser's local storage
+- Export your diagrams as PNG files
+- Import custom SVG shapes for use in your diagrams
 
 ## Credits
 

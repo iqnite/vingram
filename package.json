@@ -1,6 +1,6 @@
 {
   "name": "vingram",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Vintage Diagram drawing tool.",
   "type": "module",
   "scripts": {

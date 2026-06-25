@@ -1,8 +1,10 @@
 import { Handle, Position } from "@xyflow/react";
 
 export default function SVGShapeNode({
+  id,
   data,
 }: {
+  id: string;
   data: { svgContent: string };
 }) {
   return (
@@ -22,12 +24,13 @@ export default function SVGShapeNode({
       )}
 
       {[Position.Top, Position.Right, Position.Bottom, Position.Left].map(
-        (position) => (
+        (position, index) => (
           <Handle
+            key={index}
             type="source"
             className="omni-handle"
             position={position}
-            id={`source-handle-${position}`}
+            id={`${id}-${position}`}
             style={{ zIndex: 1 }}
           />
         ),

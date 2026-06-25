@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import SVGShapeNode from "./SVGShapeNode";
 import LibraryManager from "./LibraryManager";
 import { fetchLibrary, type LibraryData } from "./shapeManager";
 
@@ -63,8 +62,9 @@ export default function Sidebar({
         }
         return (
           <React.Fragment key={`library-${baseUrl}-${index}`}>
-            {svgNames.map((svgName: string) => (
+            {svgNames.map((svgName: string, svgIndex) => (
               <div
+                key={`svg-${baseUrl}-${svgIndex}`}
                 className="dndnode"
                 draggable
                 onDragStart={(event) =>
@@ -83,9 +83,10 @@ export default function Sidebar({
                   ?.split(".")[0]
                   .replaceAll("_", " ")}
               >
-                <SVGShapeNode
-                  data={{
-                    svgContent: `<img src="${baseUrl}${svgName}" alt="${svgName}" style="max-width: 100%; max-height: 50px;" />`,
+                <div
+                  style={{ display: "flex", justifyContent: "center" }}
+                  dangerouslySetInnerHTML={{
+                    __html: `<img src="${baseUrl}${svgName}" alt="${svgName}" style="max-width: 100%; max-height: 50px;" />`,
                   }}
                 />
               </div>

@@ -17,7 +17,7 @@ import {
 import "@xyflow/react/dist/style.css";
 
 import Sidebar from "./Sidebar";
-import SvgShapeNode from "./SVGShapeNode";
+import SVGShapeNode from "./SVGShapeNode";
 import { createSvgNode } from "./shapeManager";
 import "./App.css";
 import "./flow.css";
@@ -29,7 +29,7 @@ const LIBRARY_URLS_KEY = "vingram-library-urls";
 const DEFAULT_LIBRARY_URLS = ["/shapes.json"];
 
 const nodeTypes = {
-  svgShapeNode: SvgShapeNode,
+  svgShapeNode: SVGShapeNode,
 };
 
 const defaultEdgeOptions = {

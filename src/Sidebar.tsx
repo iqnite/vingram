@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import LibraryManager from "./LibraryManager";
-import { fetchLibrary, type LibraryData } from "./shapeManager";
+import { fetchLibrary, type LibraryData } from "./ShapeManager";
 
 export default function Sidebar({
   libraryUrls,

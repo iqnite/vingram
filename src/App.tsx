@@ -18,7 +18,7 @@ import "@xyflow/react/dist/style.css";
 
 import Sidebar from "./Sidebar";
 import SVGShapeNode from "./SVGShapeNode";
-import { createSvgNode } from "./shapeManager.ts";
+import { createSvgNode } from "./ShapeManager";
 import "./App.css";
 import "./flow.css";
 import ImageExportControls from "./ImageExportControls";

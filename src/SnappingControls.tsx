@@ -12,6 +12,7 @@ export default function SnappingControls({
       <input
         type="checkbox"
         title="Toggle grid and rotation snapping"
+        defaultChecked={true}
         onChange={(e) =>
           setSnappingOptions((prev) => ({
             ...prev,

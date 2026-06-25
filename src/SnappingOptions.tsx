@@ -8,8 +8,8 @@ export interface SnappingOptions {
 }
 
 export const defaultSnappingOptions: SnappingOptions = {
-  snapToGrid: false,
-  snapToRotation: false,
+  snapToGrid: true,
+  snapToRotation: true,
   gridSize: 10,
   rotationSnapAngle: 15,
 };

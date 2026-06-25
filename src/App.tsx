@@ -137,19 +137,11 @@ function DnDFlow() {
         y: event.clientY,
       });
 
-      if (snappingOptions.snapToGrid) {
-        const gridSize = snappingOptions.gridSize;
-        position.x = Math.round(position.x / gridSize) * gridSize;
-        position.y = Math.round(position.y / gridSize) * gridSize;
-      }
-
-      const newNode = await createSvgNode(getId(), svgUrl, position, {
-        snappingOptions: snappingOptions,
-      });
+      const newNode = await createSvgNode(getId(), svgUrl, position);
 
       setNodes((nds) => nds.concat(newNode as Node));
     },
-    [screenToFlowPosition, setNodes, snappingOptions],
+    [screenToFlowPosition, setNodes],
   );
 
   return (
@@ -183,6 +175,8 @@ function DnDFlow() {
             defaultEdgeOptions={defaultEdgeOptions}
             connectionMode={ConnectionMode.Loose}
             fitView
+            snapToGrid={snappingOptions.snapToGrid}
+            snapGrid={[snappingOptions.gridSize, snappingOptions.gridSize]}
           >
             <Background />
             <Controls />

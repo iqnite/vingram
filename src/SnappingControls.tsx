@@ -1,4 +1,6 @@
+import React from "react";
 import "./App.css";
+import type { SnappingOptions } from "./SnappingOptions";
 
 export default function SnappingControls({
   setSnappingOptions,
@@ -21,11 +23,4 @@ export default function SnappingControls({
       Snap
     </span>
   );
-}
-
-export interface SnappingOptions {
-  snapToGrid: boolean;
-  snapToRotation: boolean;
-  gridSize: number;
-  rotationSnapAngle: number;
 }

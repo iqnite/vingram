@@ -24,6 +24,7 @@ import "./flow.css";
 import ImageExportControls from "./ImageExportControls";
 import JsonExportImportControls from "./JsonExportImportControls";
 import SnappingControls from "./SnappingControls";
+import { SnappingContext, defaultSnappingOptions } from "./SnappingOptions";
 
 const AUTOSAVE_KEY = "vingram-autosave";
 const LIBRARY_URLS_KEY = "vingram-library-urls";
@@ -51,12 +52,9 @@ function DnDFlow() {
   const onConnectEnd = useCallback(() => setIsConnecting(false), []);
 
   const [isRestored, setIsRestored] = useState(false);
-  const [snappingOptions, setSnappingOptions] = useState({
-    snapToGrid: true,
-    snapToRotation: true,
-    gridSize: 10,
-    rotationSnapAngle: 15,
-  });
+  const [snappingOptions, setSnappingOptions] = useState(
+    defaultSnappingOptions,
+  );
   const [libraryUrls, setLibraryUrls] = useState<string[]>(() => {
     const saved = localStorage.getItem(LIBRARY_URLS_KEY);
     if (saved) {
@@ -145,7 +143,9 @@ function DnDFlow() {
         position.y = Math.round(position.y / gridSize) * gridSize;
       }
 
-      const newNode = await createSvgNode(getId(), svgUrl, position, snappingOptions);
+      const newNode = await createSvgNode(getId(), svgUrl, position, {
+        snappingOptions: snappingOptions,
+      });
 
       setNodes((nds) => nds.concat(newNode as Node));
     },
@@ -153,46 +153,48 @@ function DnDFlow() {
   );
 
   return (
-    <div
-      style={{
-        display: "flex",
-        width: "100%",
-        height: "100vh",
-        overflow: "hidden",
-      }}
-    >
-      <Sidebar libraryUrls={libraryUrls} setLibraryUrls={setLibraryUrls} />
+    <SnappingContext.Provider value={snappingOptions}>
       <div
-        className={`react-flow ${isConnecting ? "is-connecting" : ""}`}
-        style={{ flexGrow: 1, height: "100%" }}
+        style={{
+          display: "flex",
+          width: "100%",
+          height: "100vh",
+          overflow: "hidden",
+        }}
       >
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          nodeTypes={nodeTypes}
-          onConnect={onConnect}
-          onConnectStart={onConnectStart}
-          onConnectEnd={onConnectEnd}
-          connectionLineType={ConnectionLineType.Straight}
-          connectionLineStyle={defaultEdgeOptions.style}
-          onDrop={onDrop}
-          onDragOver={onDragOver}
-          defaultEdgeOptions={defaultEdgeOptions}
-          connectionMode={ConnectionMode.Loose}
-          fitView
+        <Sidebar libraryUrls={libraryUrls} setLibraryUrls={setLibraryUrls} />
+        <div
+          className={`react-flow ${isConnecting ? "is-connecting" : ""}`}
+          style={{ flexGrow: 1, height: "100%" }}
         >
-          <Background />
-          <Controls />
-        </ReactFlow>
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            nodeTypes={nodeTypes}
+            onConnect={onConnect}
+            onConnectStart={onConnectStart}
+            onConnectEnd={onConnectEnd}
+            connectionLineType={ConnectionLineType.Straight}
+            connectionLineStyle={defaultEdgeOptions.style}
+            onDrop={onDrop}
+            onDragOver={onDragOver}
+            defaultEdgeOptions={defaultEdgeOptions}
+            connectionMode={ConnectionMode.Loose}
+            fitView
+          >
+            <Background />
+            <Controls />
+          </ReactFlow>
+        </div>
+        <div className="drawing-controls">
+          <SnappingControls setSnappingOptions={setSnappingOptions} />
+          <ImageExportControls />
+          <JsonExportImportControls setNodes={setNodes} setEdges={setEdges} />
+        </div>
       </div>
-      <div className="drawing-controls">
-        <SnappingControls setSnappingOptions={setSnappingOptions} />
-        <ImageExportControls />
-        <JsonExportImportControls setNodes={setNodes} setEdges={setEdges} />
-      </div>
-    </div>
+    </SnappingContext.Provider>
   );
 }
 

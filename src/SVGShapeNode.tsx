@@ -4,10 +4,10 @@ import {
   useReactFlow,
   useUpdateNodeInternals,
 } from "@xyflow/react";
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { select } from "d3-selection";
 import { drag } from "d3-drag";
-import { type SnappingOptions } from "./SnappingControls";
+import { SnappingContext } from "./SnappingOptions";
 import "./flow.css";
 
 export default function SVGShapeNode({
@@ -18,13 +18,13 @@ export default function SVGShapeNode({
   data: {
     svgContent: string;
     rotation?: number;
-    snappingOptions: SnappingOptions;
   };
 }) {
   const rotateControlRef = useRef(null);
   const updateNodeInternals = useUpdateNodeInternals();
   const { updateNodeData } = useReactFlow();
   const rotation = data.rotation ?? 0;
+  const globalSnapping = useContext(SnappingContext);
 
   useEffect(() => {
     if (!rotateControlRef.current) return;
@@ -35,8 +35,8 @@ export default function SVGShapeNode({
       const rad = Math.atan2(dx, dy);
       const deg = rad * (180 / Math.PI);
       let newRotation = 180 - deg;
-      if (data.snappingOptions.snapToRotation) {
-        const snapAngle = data.snappingOptions.rotationSnapAngle;
+      if (globalSnapping.snapToRotation) {
+        const snapAngle = globalSnapping.rotationSnapAngle;
         newRotation = Math.round(newRotation / snapAngle) * snapAngle;
       }
       updateNodeData(id, { rotation: newRotation });
@@ -44,7 +44,13 @@ export default function SVGShapeNode({
     });
     // eslint-disable-next-line no-unused-vars
     selection.call(dragHandler as (selection: unknown) => void);
-  }, [id, updateNodeData, updateNodeInternals, data.snappingOptions]);
+  }, [
+    id,
+    updateNodeData,
+    updateNodeInternals,
+    globalSnapping.snapToRotation,
+    globalSnapping.rotationSnapAngle,
+  ]);
 
   return (
     <div

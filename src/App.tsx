@@ -18,14 +18,15 @@ import "@xyflow/react/dist/style.css";
 import Sidebar from "./Sidebar";
 import SvgShapeNode from "./SVGShapeNode";
 import { createSvgNode } from "./shapeManager";
-import { shapes } from "./shapes";
 import "./App.css";
 import "./flow.css";
 import ImageExportControls from "./ImageExportControls";
 import JsonExportImportControls from "./JsonExportImportControls";
 
 const AUTOSAVE_KEY = "vingram-autosave";
+const LIBRARY_URLS_KEY = "vingram-library-urls";
 
+const libraryUrls = ["/shapes.json"];
 const nodeTypes = {
   svgShapeNode: SvgShapeNode,
 };
@@ -55,7 +56,7 @@ function DnDFlow() {
   const { screenToFlowPosition, setViewport, toObject } = useReactFlow();
 
   useEffect(() => {
-    const restoreFlow = () => {
+    const restoreData = () => {
       const storedFlow = localStorage.getItem(AUTOSAVE_KEY);
       if (storedFlow) {
         const flowData = JSON.parse(storedFlow);
@@ -65,15 +66,23 @@ function DnDFlow() {
           setViewport(flowData.viewport || { x: 0, y: 0, zoom: 1 });
         }
       }
+      const storedLibraryUrls = localStorage.getItem(LIBRARY_URLS_KEY);
+      if (storedLibraryUrls) {
+        const libraryUrls = JSON.parse(storedLibraryUrls);
+        for (const url of libraryUrls) {
+          if (!libraryUrls.includes(url)) libraryUrls.push(url);
+        }
+      }
       setIsRestored(true);
     };
-    restoreFlow();
+    restoreData();
   }, [setNodes, setEdges, setViewport]);
 
   useEffect(() => {
     if (isRestored) {
       const flowData = toObject();
       localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(flowData));
+      localStorage.setItem(LIBRARY_URLS_KEY, JSON.stringify(libraryUrls));
     }
   }, [nodes, edges, isRestored, toObject]);
 
@@ -122,7 +131,7 @@ function DnDFlow() {
         overflow: "hidden",
       }}
     >
-      <Sidebar shapeUrls={shapes} />
+      <Sidebar libraryUrls={libraryUrls} />
       <div
         className={`react-flow ${isConnecting ? "is-connecting" : ""}`}
         style={{ flexGrow: 1, height: "100%" }}

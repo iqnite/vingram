@@ -54,3 +54,22 @@ export async function createSvgNode(
     },
   };
 }
+
+export interface LibraryData {
+  svgNames: string[];
+  baseUrl: string;
+}
+
+export async function fetchLibrary(url: string): Promise<LibraryData | null> {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Network response was not ok: ${response.statusText}`);
+    }
+    const library = await response.json();
+    return library;
+  } catch (error) {
+    console.error(`Failed to fetch SVG names from ${url}:`, error);
+    return null;
+  }
+}

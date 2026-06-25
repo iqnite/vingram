@@ -2,6 +2,8 @@
 
 Ever feel the need to draw diagrams that look like drawings in old science textbooks? Vingram is a React-based diagramming tool that allows you to create diagrams with that hand-drawn aesthetic. It uses SVG shapes and provides a simple interface for creating and connecting nodes, as well as features like snapping to a grid and the ability to add custom SVG shapes.
 
+![Screenshot](.github/readme-images/screenshot.jpeg)
+
 ## Features
 
 - Create nodes with custom SVG shapes

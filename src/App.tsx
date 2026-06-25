@@ -26,7 +26,7 @@ import JsonExportImportControls from "./JsonExportImportControls";
 
 const AUTOSAVE_KEY = "vingram-autosave";
 const LIBRARY_URLS_KEY = "vingram-library-urls";
-const DEFAULT_LIBRARY_URLS = ["/shapes.json"];
+const DEFAULT_LIBRARY_URLS = ["/vingram/shapes.json"];
 
 const nodeTypes = {
   svgShapeNode: SVGShapeNode,

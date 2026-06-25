@@ -1,9 +1,5 @@
 import { useCallback } from "react";
-import {
-  useReactFlow,
-  getNodesBounds,
-  getViewportForBounds,
-} from "@xyflow/react";
+import { useReactFlow, getNodesBounds } from "@xyflow/react";
 import { toPng, toBlob } from "html-to-image";
 import "./App.css";
 
@@ -12,21 +8,23 @@ export default function ImageExportControls() {
 
   const getImageOptions = useCallback(() => {
     const nodesBounds = getNodesBounds(getNodes());
-    const viewport = getViewportForBounds(nodesBounds, 1024, 768, 0.5, 2, {
-      top: 20,
-      right: 20,
-      bottom: 20,
-      left: 20,
-    });
-
+    const padding = 20;
+    const imageWidth = nodesBounds.width + padding * 2;
+    const imageHeight = nodesBounds.height + padding * 2;
+    const tx = -nodesBounds.x + padding;
+    const ty = -nodesBounds.y + padding;
     return {
       backgroundColor: "#ffffff",
-      width: 1024,
-      height: 768,
+      width: imageWidth,
+      height: imageHeight,
+      canvasWidth: imageWidth,
+      canvasHeight: imageHeight,
       style: {
-        width: "1024px",
-        height: "768px",
-        transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})`,
+        width: `${imageWidth}px`,
+        height: `${imageHeight}px`,
+        overflow: "hidden",
+        transformOrigin: "top left",
+        transform: `translate(${tx}px, ${ty}px) scale(1)`,
       },
     };
   }, [getNodes]);

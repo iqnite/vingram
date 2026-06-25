@@ -73,6 +73,7 @@ export default function Sidebar({
                 style={{
                   padding: "10px",
                   border: "1px solid #333",
+                  borderRadius: "4px",
                   marginTop: "10px",
                   cursor: "grab",
                 }}

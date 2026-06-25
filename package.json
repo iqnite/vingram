@@ -23,7 +23,7 @@
   "bugs": {
     "url": "https://github.com/iqnite/vingram/issues"
   },
-  "homepage": "https://github.com/iqnite/vingram#readme",
+  "homepage": "https://github.com/iqnite/vingram",
   "dependencies": {
     "@xyflow/react": "^12.11.1",
     "html-to-image": "^1.11.13",

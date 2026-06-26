@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { useReactFlow } from "@xyflow/react";
 import { toPng, toBlob } from "html-to-image";
 import "./App.css";
+import DropdownMenu from "./DropdownMenu";
 
 export default function ImageExportControls() {
   const { fitView, getNodes } = useReactFlow();
@@ -55,15 +56,13 @@ export default function ImageExportControls() {
 
   return (
     <span className="drawing-control-section">
-      <button
-        onClick={onCopyToClipboard}
-        title="Copy the diagram to the clipboard"
-      >
-        Copy
-      </button>
-      <button onClick={onDownload} title="Download the diagram as a PNG image">
-        Download PNG
-      </button>
+      <DropdownMenu
+        title="Export"
+        options={[
+          { name: "Copy to clipboard", callback: onCopyToClipboard },
+          { name: "Download PNG", callback: onDownload },
+        ]}
+      />
     </span>
   );
 }

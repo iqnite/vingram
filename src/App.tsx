@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type SetStateAction,
+} from "react";
 import {
   ReactFlow,
   Background,
@@ -21,6 +27,7 @@ import SVGShapeNode from "./SVGShapeNode";
 import { createSvgNode } from "./ShapeManager";
 import "./App.css";
 import "./flow.css";
+import ContextMenu from "./ContextMenu";
 import ImageExportControls from "./ImageExportControls";
 import JsonExportImportControls from "./JsonExportImportControls";
 import SnappingControls from "./SnappingControls";
@@ -52,6 +59,8 @@ function DnDFlow() {
   const onConnectEnd = useCallback(() => setIsConnecting(false), []);
 
   const [isRestored, setIsRestored] = useState(false);
+  const [menu, setMenu] = useState(null);
+  const ref = useRef(null);
   const [snappingOptions, setSnappingOptions] = useState(
     defaultSnappingOptions,
   );
@@ -144,6 +153,36 @@ function DnDFlow() {
     [screenToFlowPosition, setNodes],
   );
 
+  const onNodeContextMenu = useCallback(
+    (event: React.MouseEvent<Element>, node: Node) => {
+      event.preventDefault();
+      if (!ref || !ref.current) return;
+      const pane = (ref.current as HTMLElement).getBoundingClientRect();
+      const menuPadding = 0;
+      setMenu({
+        id: node.id,
+        top:
+          event.clientX < pane.width - menuPadding
+            ? event.clientY - pane.top + menuPadding
+            : undefined,
+        left:
+          event.clientX < pane.width - menuPadding
+            ? event.clientX - pane.left + menuPadding
+            : undefined,
+        right:
+          event.clientX >= pane.width - menuPadding
+            ? pane.width - (event.clientX - pane.left) + menuPadding
+            : undefined,
+        bottom:
+          event.clientX >= pane.width - menuPadding
+            ? pane.height - (event.clientY - pane.top) + menuPadding
+            : undefined,
+      } as unknown as SetStateAction<null>);
+    },
+    [setMenu],
+  );
+  const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
+
   return (
     <SnappingContext.Provider value={snappingOptions}>
       <div
@@ -160,6 +199,7 @@ function DnDFlow() {
           style={{ flexGrow: 1, height: "100%" }}
         >
           <ReactFlow
+            ref={ref}
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
@@ -172,6 +212,8 @@ function DnDFlow() {
             connectionLineStyle={defaultEdgeOptions.style}
             onDrop={onDrop}
             onDragOver={onDragOver}
+            onPaneClick={onPaneClick}
+            onNodeContextMenu={onNodeContextMenu}
             defaultEdgeOptions={defaultEdgeOptions}
             connectionMode={ConnectionMode.Loose}
             fitView
@@ -180,6 +222,12 @@ function DnDFlow() {
           >
             <Background />
             <Controls />
+            {menu && (
+              <ContextMenu
+                onClick={onPaneClick}
+                {...(menu as ContextMenuProps)}
+              />
+            )}
           </ReactFlow>
         </div>
         <div className="drawing-controls">
@@ -198,4 +246,12 @@ export default function App() {
       <DnDFlow />
     </ReactFlowProvider>
   );
+}
+
+interface ContextMenuProps {
+  id: string;
+  top: number;
+  left: number;
+  right: number;
+  bottom: number;
 }

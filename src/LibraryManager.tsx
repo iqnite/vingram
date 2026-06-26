@@ -30,19 +30,21 @@ export default function LibraryManager({
       }}
     >
       <div className="title">Libraries</div>
-      <button onClick={addLibraryDialog}>Add Library</button>
-      <div>
+      <div
+        style={{
+          fontSize: "0.8em",
+        }}
+      >
+        Libraries allow you to use custom shapes in your diagrams.{" "}
         <a
           href="/vingram/example-library.json"
           target="_blank"
           rel="noopener noreferrer"
-          style={{
-            fontSize: "0.8em",
-          }}
         >
-          Example Library
+          Show Example
         </a>
       </div>
+      <button onClick={addLibraryDialog}>Add Library</button>
       {libraryUrls.map((url, index) => (
         <div key={index} style={{ marginTop: "10px" }}>
           {url}{" "}

@@ -102,6 +102,16 @@ export default function Sidebar({
         display={isLibraryManagerDisplayed}
         setLibraryUrls={setLibraryUrls}
       />
+      <div>
+        Made with 🩷 by{" "}
+        <a
+          href="https://iqnite.github.io/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          phorb
+        </a>
+      </div>
     </aside>
   );
 }
